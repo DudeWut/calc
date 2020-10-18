@@ -1,274 +1,340 @@
-// Java program to create a simple calculator 
-// with basic +, -, /, * using java swing elements 
+// Java program to create a simple calculator
+// with basic +, -, /, * using java swing elements
 
-import java.awt.event.*; 
-import javax.swing.*; 
-import java.awt.*; 
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Stack;
-class calculator extends JFrame implements ActionListener { 
-	// create a frame 
-	static JFrame f; 
+import java.text.DecimalFormat;
+class calculator extends JFrame implements ActionListener {
+    // create a frame
+    static JFrame f;
 
-	// create a textfield 
-	static JTextField l; 
+    // create a textfield
+    static JTextField l;
 
-	// store oprerator and operands 
-	String s0, s1, s2; 
+    // store oprerator and operands
+    String s0, s1, s2;
 
-	// default constrcutor 
-	calculator() 
-	{ 
-		s0 = s1 = s2 = ""; 
-	} 
+    // default constrcutor
+    calculator()
+    {
+        s0 = s1 = s2 = "";
+    }
 
-	// main function 
-	public static void main(String args[]) 
-	{ 
-		// create a frame 
-		f = new JFrame("calculator"); 
+    // main function
+    public static void main(String args[])
+    {
+        // create a frame
+        f = new JFrame("calculator");
 
-		try { 
-			// set look and feel 
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
-		} 
-		catch (Exception e) { 
-			System.err.println(e.getMessage()); 
-		} 
+        try {
+            // set look and feel
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
-		// create a object of class 
-		calculator c = new calculator(); 
+        // create a object of class
+        calculator c = new calculator();
 
-		// create a textfield 
-		l = new JTextField(16); 
+        // create a textfield
+        l = new JTextField(16);
 
-		// set the textfield to non editable 
-		l.setEditable(false); 
+        // set the textfield to non editable
+        l.setEditable(false);
 
-		// create number buttons and some operators 
-		JButton b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, ba, bs, bd, bm, be, beq, beq1, bparo, bparc, bsin; 
+        // create number buttons and some operators
+        JButton b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, ba, bs, bd, bm, be, beq, beq1, bparo, bparc, bsin, bpow,
+                bcos, btan, bcot, bln, blog, bback;
 
-		// create number buttons 
-		b0 = new JButton("0"); 
-		b1 = new JButton("1"); 
-		b2 = new JButton("2"); 
-		b3 = new JButton("3"); 
-		b4 = new JButton("4"); 
-		b5 = new JButton("5"); 
-		b6 = new JButton("6"); 
-		b7 = new JButton("7"); 
-		b8 = new JButton("8"); 
-		b9 = new JButton("9"); 
+        // create number buttons
+        b0 = new JButton("0");
+        b1 = new JButton("1");
+        b2 = new JButton("2");
+        b3 = new JButton("3");
+        b4 = new JButton("4");
+        b5 = new JButton("5");
+        b6 = new JButton("6");
+        b7 = new JButton("7");
+        b8 = new JButton("8");
+        b9 = new JButton("9");
 
-		// equals button 
-		beq1 = new JButton("="); 
+        // equals button
+        beq1 = new JButton("=");
 
-		// create operator buttons 
-		ba = new JButton("+"); 
-		bs = new JButton("-"); 
-		bd = new JButton("/"); 
-		bm = new JButton("*"); 
-		beq = new JButton("C"); 
-      bparo = new JButton("(");
-      bparc = new JButton(")");
-      bsin = new JButton("sin");
+        // create operator buttons
+        ba = new JButton("+");
+        bs = new JButton("-");
+        bd = new JButton("/");
+        bm = new JButton("*");
+        beq = new JButton("C");
+        bparo = new JButton("(");
+        bparc = new JButton(")");
+        bpow = new JButton("^");
+        bsin = new JButton("sin");
+        bcos = new JButton("cos");
+        btan = new JButton("tan");
+        bcot = new JButton("cot");
+        bln = new JButton("ln");
+        blog = new JButton("log");
+        bback = new JButton("⌫");
+        // create . button
+        be = new JButton(".");
 
-		// create . button 
-		be = new JButton("."); 
+        // create a panel
+        JPanel p = new JPanel();
 
-		// create a panel 
-		JPanel p = new JPanel(); 
+        // add action listeners
+        beq.addActionListener(c);
+        bm.addActionListener(c);
+        bd.addActionListener(c);
+        bs.addActionListener(c);
+        ba.addActionListener(c);
+        b9.addActionListener(c);
+        b8.addActionListener(c);
+        b7.addActionListener(c);
+        b6.addActionListener(c);
+        b5.addActionListener(c);
+        b4.addActionListener(c);
+        b3.addActionListener(c);
+        b2.addActionListener(c);
+        b1.addActionListener(c);
+        b0.addActionListener(c);
+        be.addActionListener(c);
+        beq1.addActionListener(c);
+        bparo.addActionListener(c);
+        bparc.addActionListener(c);
+        bsin.addActionListener(c);
+        bpow.addActionListener(c);
+        bcos.addActionListener(c);
+        btan.addActionListener(c);
+        bcot.addActionListener(c);
+        bln.addActionListener(c);
+        blog.addActionListener(c);
+        bback.addActionListener(c);
 
-		// add action listeners 
-      beq.addActionListener(c);
-		bm.addActionListener(c); 
-		bd.addActionListener(c); 
-		bs.addActionListener(c); 
-		ba.addActionListener(c); 
-		b9.addActionListener(c); 
-		b8.addActionListener(c); 
-		b7.addActionListener(c); 
-		b6.addActionListener(c); 
-		b5.addActionListener(c); 
-		b4.addActionListener(c); 
-		b3.addActionListener(c); 
-		b2.addActionListener(c); 
-		b1.addActionListener(c); 
-		b0.addActionListener(c); 
-		be.addActionListener(c);  
-		beq1.addActionListener(c); 
-      bparo.addActionListener(c);
-      bparc.addActionListener(c);
-      bsin.addActionListener(c);
+        // add elements to panel
+        p.add(l);
+        p.add(ba);
+        p.add(b1);
+        p.add(b2);
+        p.add(b3);
+        p.add(bs);
+        p.add(b4);
+        p.add(b5);
+        p.add(b6);
+        p.add(bm);
+        p.add(b7);
+        p.add(b8);
+        p.add(b9);
+        p.add(bd);
+        p.add(be);
+        p.add(b0);
+        p.add(beq);
+        p.add(bback);
+        p.add(bpow);
+        p.add(bsin);
+        p.add(bcos);
+        p.add(btan);
+        p.add(bcot);
+        p.add(bln);
+        p.add(blog);
+        p.add(bparo);
+        p.add(bparc);
+        p.add(be);
+        p.add(beq1);
 
-		// add elements to panel 
-		p.add(l); 
-		p.add(ba); 
-		p.add(b1); 
-		p.add(b2); 
-		p.add(b3); 
-		p.add(bs); 
-		p.add(b4); 
-		p.add(b5); 
-		p.add(b6); 
-		p.add(bm); 
-		p.add(b7); 
-		p.add(b8); 
-		p.add(b9); 
-		p.add(bd); 
-		p.add(be); 
-		p.add(b0); 
-		p.add(beq); 
-		p.add(beq1); 
-      p.add(bparo);
-      p.add(bparc);
-      p.add(bsin);
+        // set Background of panel
+        p.setBackground(Color.yellow);
 
-		// set Background of panel 
-		p.setBackground(Color.yellow); 
+        // add panel to frame
+        f.add(p);
 
-		// add panel to frame 
-		f.add(p); 
+        f.setSize(220, 320);
+        f.show();
+    }
+    public void actionPerformed(ActionEvent e) {
+        String s = e.getActionCommand();
+        if(s.equals("C")) l.setText("");
+        else if(s.equals("⌫"))l.setText(l.getText().substring(0, l.getText().length()-1));
+        else if(!s.equals("="))l.setText(l.getText() + s);
+        else if(s.equals("=")){
+            //System.out.println(infixToPostfix(l.getText()));
+            String s1 = infixToPostfix(l.getText());
+            System.out.println(s1);
+            double d = evaluatePostfix(s1);
+            System.out.println(d);
+            //int res = evaluatePostfix(s1);
+           // l.setText(Integer.toString(res));
 
-		f.setSize(200, 250); 
-		f.show(); 
-	} 
-	public void actionPerformed(ActionEvent e) { 
-      String s = e.getActionCommand();
-      if(s.equals("C")) l.setText("");
-      else if(s.equals("sin"))l.setText(l.getText() + "s");
-      else if(!s.equals("="))l.setText(l.getText() + s);
-      else if(s.equals("=")){
-         //System.out.println(infixToPostfix(l.getText()));
-         String s1 = infixToPostfix(l.getText());
-         int res = evaluatePostfix(s);
-        
-         
-      }     		
-	} 
-   
-    static int Prec(char ch) 
-    { 
-        switch (ch) 
-        { 
-        case '+': 
-        case '-': 
-            return 1; 
-       
-        case '*': 
-        case '/': 
-            return 2; 
-       
-        case '^': 
-            return 3; 
-        } 
-        return -1; 
-    } 
-       
-    // The main method that converts given infix expression 
-    // to postfix expression.  
-    static String infixToPostfix(String exp) 
-    { 
-        // initializing empty String for result 
-        String result = new String(""); 
-          
-        // initializing empty stack 
-        Stack<Character> stack = new Stack<>(); 
-          
-        for (int i = 0; i<exp.length(); ++i) 
-        { 
-            char c = exp.charAt(i); 
-              
-             // If the scanned character is an operand, add it to output. 
-            if (Character.isLetterOrDigit(c)) 
-                result += c; 
-               
-            // If the scanned character is an '(', push it to the stack. 
-            else if (c == '(') 
-                stack.push(c); 
-              
-            //  If the scanned character is an ')', pop and output from the stack  
-            // until an '(' is encountered. 
-            else if (c == ')') 
-            { 
-                while (!stack.isEmpty() && stack.peek() != '(') 
-                    result += stack.pop(); 
-                  
-                if (!stack.isEmpty() && stack.peek() != '(') 
-                    return "Invalid Expression"; // invalid expression                 
+        }
+    }
+
+    static int Prec(char ch)
+    {
+        switch (ch)
+        {
+            case '+':
+            case '-':
+                return 1;
+
+            case '*':
+            case '/':
+                return 2;
+
+            case '^':
+                return 3;
+        }
+        return -1;
+    }
+
+    // The main method that converts given infix expression
+    // to postfix expression.
+    static String infixToPostfix(String exp)
+    {
+        // initializing empty String for result
+        String result = "";
+
+        // initializing empty stack
+        Stack<Character> stack = new Stack<>();
+        char c, c1;
+        for (int i = 0; i<exp.length(); ++i)
+        {
+            c = exp.charAt(i);
+            c1 = '?';
+            if( i + 1 < exp.length())  c1 = exp.charAt(i+1);
+
+            // If the scanned character is an operand, add it to output.
+            if (Character.isLetterOrDigit(c) || c == '.') {
+                result += c;
+                if (!Character.isLetterOrDigit(c1) && c1 != '.') result += " " ;
+            }
+                // If the scanned character is an '(', push it to the stack.
+            else if (c == '(')
+                stack.push(c);
+
+                //  If the scanned character is an ')', pop and output from the stack
+                // until an '(' is encountered.
+            else if (c == ')')
+            {
+                while (!stack.isEmpty() && stack.peek() != '(')
+                    result += stack.pop() + " ";
+
+                if (!stack.isEmpty() && stack.peek() != '(')
+                    return "Invalid Expression"; // invalid expression
                 else
-                    stack.pop(); 
-            } 
-            else // an operator is encountered 
-            { 
-                while (!stack.isEmpty() && Prec(c) <= Prec(stack.peek())){ 
-                    if(stack.peek() == '(') 
-                        return "Invalid Expression"; 
-                    result += stack.pop(); 
-             } 
-                stack.push(c); 
-            } 
-       
-        } 
-       
-        // pop all the operators from the stack 
-        while (!stack.isEmpty()){ 
-            if(stack.peek() == '(') 
-                return "Invalid Expression"; 
-            result += stack.pop(); 
-         } 
-        return result; 
-    } 
-    
-     static int evaluatePostfix(String exp) 
-    { 
-        //create a stack 
-        Stack<Integer> stack=new Stack<>(); 
-          
-        // Scan all characters one by one 
-        for(int i=0;i<exp.length();i++) 
-        { 
-            char c=exp.charAt(i); 
-              
-            // If the scanned character is an operand (number here), 
-            // push it to the stack. 
-            if(Character.isDigit(c)) 
-            stack.push(c - '0'); 
-              
-            //  If the scanned character is an operator, pop two 
-            // elements from stack apply the operator 
+                    stack.pop();
+            }
+            else // an operator is encountered
+            {
+                while (!stack.isEmpty() && Prec(c) <= Prec(stack.peek())){
+                    if(stack.peek() == '(')
+                        return "Invalid Expression";
+                    result += stack.pop() + " ";
+                }
+                stack.push(c);
+            }
+
+        }
+
+        // pop all the operators from the stack
+        while (!stack.isEmpty()){
+            if(stack.peek() == '(')
+                return "Invalid Expression";
+            result += stack.pop() + " ";
+        }
+        return result;
+    }
+
+    static double evaluatePostfix(String exp)
+    {
+        //create a stack
+        Stack<Double> stack=new Stack<>();
+        String tokens[] = exp.split(" ");
+        Character c = '?';
+        DecimalFormat df = new DecimalFormat("0.0000");
+        // Scan all characters one by one
+        for(int i = 0; i < tokens.length; i++)
+        {
+            String s = tokens[i];
+            // If the scanned token is an operand push it to the stack.
+            if(isNumber(s)) stack.push(Double.parseDouble(s));
+            else if(isF(s)){
+                switch(s){
+                    case "sin":
+                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.sin(Double.parseDouble(tokens[i + 1])))));
+                        break;
+                    case "cos":
+                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.cos(Double.parseDouble(tokens[i + 1])))));
+                        break;
+                    case "tan":
+                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.tan(Double.parseDouble(tokens[i + 1])))));
+                        break;
+                    case "cot":
+                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(1 / Math.tan(Double.parseDouble(tokens[i + 1])))));
+                        break;
+                    case "ln":
+                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.log(Double.parseDouble(tokens[i + 1])))));
+                        break;
+                    case "log":
+                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.log10(Double.parseDouble(tokens[i + 1])))));
+                        break;
+                }
+            }
+
+                //  If the scanned character is an operator, pop two
+                // elements from stack apply the operator
             else
-            { 
-                int val1 = stack.pop(); 
-                int val2 = stack.pop(); 
-                  
-                switch(c) 
-                { 
-                    case '+': 
-                    stack.push(val2+val1); 
-                    break; 
-                      
-                    case '-': 
-                    stack.push(val2- val1); 
-                    break; 
-                      
-                    case '/': 
-                    stack.push(val2/val1); 
-                    break; 
-                      
-                    case '*': 
-                    stack.push(val2*val1); 
-                    break; 
-              } 
-            } 
-        } 
-        return stack.pop();     
-    } 
-   
-   public void evaluateExpressionn(String s){
-     
-   
-   
-   
-   } 
-   
-   } 
+            {
+                double val1 = stack.pop();
+                double val2 = stack.pop();
+                c = s.charAt(0);
+
+                switch(c)
+                {
+                    case '+':
+                        stack.push(val2+val1);
+                        break;
+
+                    case '-':
+                        stack.push(val2- val1);
+                        break;
+
+                    case '/':
+                        stack.push(val2/val1);
+                        break;
+
+                    case '*':
+                        stack.push(val2*val1);
+                        break;
+                    case '^':
+                        stack.push(Math.pow(val2, val1));
+                        break;
+                }
+            }
+        }
+        return stack.pop();
+    }
+
+    public static boolean isNumber(String s){
+        for(int i = 0; i < s.length(); i++){
+            if(s.charAt(i) != '.' && !Character.isDigit(s.charAt(i))) return false;
+        }
+        return true;
+    }
+    public static boolean isF(String s){
+
+        switch(s){
+            case "sin":
+            case "cos":
+            case "tan":
+            case "cot":
+            case "ln":
+            case "log":
+                return true;
+        }
+        return false;
+    }
+}
