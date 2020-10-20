@@ -4,7 +4,6 @@
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.Stack;
 import java.text.DecimalFormat;
 class calculator extends JFrame implements ActionListener {
@@ -163,17 +162,19 @@ class calculator extends JFrame implements ActionListener {
         else if(s.equals("⌫") && l.getText().length() == 0);
         else if(!s.equals("=") && !isF(s))l.setText(l.getText() + s);
         else if(s.equals("=")){
-            DecimalFormat df = new DecimalFormat("0.0000");
-            String s1 = infixToPostfix(l.getText());
-            System.out.println(s1);
+            DecimalFormat df = new DecimalFormat("0.000000000");
+            String s1;
             String res;
             double d;
             try {
+                s1 = infixToPostfix(l.getText());
+                System.out.println(s1);
                 d = evaluatePostfix(s1);
                 res = df.format(d);
                 System.out.println(res);
             } catch(Exception ex){
                 System.out.println("error");
+                System.out.println(ex);
             }
             //int res = evaluatePostfix(s1);
            // l.setText(Integer.toString(res));
