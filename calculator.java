@@ -4,6 +4,7 @@
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.Stack;
 import java.text.DecimalFormat;
 class calculator extends JFrame implements ActionListener {
@@ -165,9 +166,15 @@ class calculator extends JFrame implements ActionListener {
             DecimalFormat df = new DecimalFormat("0.0000");
             String s1 = infixToPostfix(l.getText());
             System.out.println(s1);
-            double d = evaluatePostfix(s1);
-            String res = df.format(d);
-            System.out.println(res);
+            String res;
+            double d;
+            try {
+                d = evaluatePostfix(s1);
+                res = df.format(d);
+                System.out.println(res);
+            } catch(Exception ex){
+                System.out.println("error");
+            }
             //int res = evaluatePostfix(s1);
            // l.setText(Integer.toString(res));
 
