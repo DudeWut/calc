@@ -164,9 +164,11 @@ class calculator extends JFrame implements ActionListener {
         else if(s.equals("=")){
             DecimalFormat df = new DecimalFormat("0.000000000");
             String s1;
-            String res;
+            String res, r;
             double d;
             try {
+                //r = "-(2+-2)";
+                //System.out.println(unaryReplacer(r, 4));
                 s1 = infixToPostfix(l.getText());
                 System.out.println(s1);
                 d = evaluatePostfix(s1);
@@ -240,6 +242,7 @@ class calculator extends JFrame implements ActionListener {
             // If the scanned character is an operand, add it to output.
             if (Character.isLetterOrDigit(c) || c == '.' || isUnary(exp, i)) {
                 result += c;
+                if(isUnary(exp, i) && c1 == '(') exp = unaryReplacer(exp, i);
                 if ((isOperator(c1) && !isUnary(exp, i + 1)) ||
                         (Character.isLetter(c) && !Character.isLetterOrDigit(c1))) result += " " ;
             }
@@ -397,5 +400,12 @@ class calculator extends JFrame implements ActionListener {
 
         }
         return false;
+    }
+
+    public static String unaryReplacer(String originalString, int index) {
+        String s = originalString.substring(0, index) + originalString.substring(index+1);
+        StringBuffer newString = new StringBuffer(s);
+        newString.insert(index, "-1*");
+        return newString.toString();
     }
 }
