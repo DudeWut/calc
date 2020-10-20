@@ -167,16 +167,14 @@ class calculator extends JFrame implements ActionListener {
             String res, r;
             double d;
             try {
-                //r = "-(2+-2)";
-                //System.out.println(unaryReplacer(r, 4));
                 s1 = infixToPostfix(l.getText());
                 System.out.println(s1);
                 d = evaluatePostfix(s1);
                 res = df.format(d);
-                System.out.println(res);
+                System.out.println(res + "\n");
             } catch(Exception ex){
                 System.out.println("error");
-                System.out.println(ex);
+                System.out.println(ex + "\n");
             }
             //int res = evaluatePostfix(s1);
            // l.setText(Integer.toString(res));
@@ -243,6 +241,10 @@ class calculator extends JFrame implements ActionListener {
             if (Character.isLetterOrDigit(c) || c == '.' || isUnary(exp, i)) {
                 result += c;
                 if(isUnary(exp, i) && c1 == '(') exp = unaryReplacer(exp, i);
+                if(Character.isDigit(c) && c1 == '(' || Character.isDigit(c) && c1 == ')'){
+                        exp = otherReplacer(exp, i);
+                        c1 = '*';
+                }
                 if ((isOperator(c1) && !isUnary(exp, i + 1)) ||
                         (Character.isLetter(c) && !Character.isLetterOrDigit(c1))) result += " " ;
             }
@@ -402,10 +404,20 @@ class calculator extends JFrame implements ActionListener {
         return false;
     }
 
+    //rewrites -(2+2) to -1*(2+2) for the infixToPostfix function to understand
     public static String unaryReplacer(String originalString, int index) {
         String s = originalString.substring(0, index) + originalString.substring(index+1);
         StringBuffer newString = new StringBuffer(s);
         newString.insert(index, "-1*");
+        return newString.toString();
+    }
+
+    //rewrites 2(2+2) to 2*(2+2) for the infixToPostfix function to understand
+    public static String otherReplacer(String originalString, int index) {
+        StringBuffer newString = new StringBuffer(originalString);
+        Character c = originalString.charAt(index + 1);
+        if(c == ')') newString.insert(index + 2, "*");
+        else newString.insert(index + 1, "*");
         return newString.toString();
     }
 }
