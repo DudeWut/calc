@@ -158,17 +158,41 @@ class calculator extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
         if(s.equals("C")) l.setText("");
-        else if(s.equals("⌫"))l.setText(l.getText().substring(0, l.getText().length()-1));
-        else if(!s.equals("="))l.setText(l.getText() + s);
+        else if(s.equals("⌫") && l.getText().length() > 0)l.setText(l.getText().substring(0, l.getText().length()-1));
+        else if(s.equals("⌫") && l.getText().length() == 0);
+        else if(!s.equals("=") && !isF(s))l.setText(l.getText() + s);
         else if(s.equals("=")){
-            //System.out.println(infixToPostfix(l.getText()));
+            DecimalFormat df = new DecimalFormat("0.0000");
             String s1 = infixToPostfix(l.getText());
             System.out.println(s1);
             double d = evaluatePostfix(s1);
-            System.out.println(d);
+            String res = df.format(d);
+            System.out.println(res);
             //int res = evaluatePostfix(s1);
            // l.setText(Integer.toString(res));
 
+        }
+        else{
+            switch(s){
+                case "sin":
+                    l.setText(l.getText() + "sin(");
+                    break;
+                case "cos":
+                    l.setText(l.getText() + "cos(");
+                    break;
+                case "tan":
+                    l.setText(l.getText() + "tan(");
+                    break;
+                case "cot":
+                    l.setText(l.getText() + "cot(");
+                    break;
+                case "ln":
+                    l.setText(l.getText() + "ln(");
+                    break;
+                case "log":
+                    l.setText(l.getText() + "log(");
+                    break;
+            }
         }
     }
 
@@ -205,11 +229,11 @@ class calculator extends JFrame implements ActionListener {
             c = exp.charAt(i);
             c1 = '?';
             if( i + 1 < exp.length())  c1 = exp.charAt(i+1);
-
             // If the scanned character is an operand, add it to output.
-            if (Character.isLetterOrDigit(c) || c == '.') {
+            if (Character.isLetterOrDigit(c) || c == '.' || isUnary(exp, i)) {
                 result += c;
-                if (!Character.isLetterOrDigit(c1) && c1 != '.') result += " " ;
+                if ((isOperator(c1) && !isUnary(exp, i + 1)) ||
+                        (Character.isLetter(c) && !Character.isLetterOrDigit(c1))) result += " " ;
             }
                 // If the scanned character is an '(', push it to the stack.
             else if (c == '(')
@@ -220,12 +244,14 @@ class calculator extends JFrame implements ActionListener {
             else if (c == ')')
             {
                 while (!stack.isEmpty() && stack.peek() != '(')
-                    result += stack.pop() + " ";
+                    result += " " + stack.pop();
 
                 if (!stack.isEmpty() && stack.peek() != '(')
                     return "Invalid Expression"; // invalid expression
-                else
+                else {
                     stack.pop();
+                    result += " ";
+                }
             }
             else // an operator is encountered
             {
@@ -243,7 +269,7 @@ class calculator extends JFrame implements ActionListener {
         while (!stack.isEmpty()){
             if(stack.peek() == '(')
                 return "Invalid Expression";
-            result += stack.pop() + " ";
+            result += " " + stack.pop();
         }
         return result;
     }
@@ -252,9 +278,9 @@ class calculator extends JFrame implements ActionListener {
     {
         //create a stack
         Stack<Double> stack=new Stack<>();
+        exp = exp.replaceAll("\\s+", " ");
         String tokens[] = exp.split(" ");
         Character c = '?';
-        DecimalFormat df = new DecimalFormat("0.0000");
         // Scan all characters one by one
         for(int i = 0; i < tokens.length; i++)
         {
@@ -264,22 +290,22 @@ class calculator extends JFrame implements ActionListener {
             else if(isF(s)){
                 switch(s){
                     case "sin":
-                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.sin(Double.parseDouble(tokens[i + 1])))));
+                        tokens[i+1] = Double.toString(Math.sin(Double.parseDouble(tokens[i + 1])));
                         break;
                     case "cos":
-                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.cos(Double.parseDouble(tokens[i + 1])))));
+                        tokens[i+1] = Double.toString(Math.cos(Double.parseDouble(tokens[i + 1])));
                         break;
                     case "tan":
-                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.tan(Double.parseDouble(tokens[i + 1])))));
+                        tokens[i+1] = Double.toString(Math.tan(Double.parseDouble(tokens[i + 1])));
                         break;
                     case "cot":
-                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(1 / Math.tan(Double.parseDouble(tokens[i + 1])))));
+                        tokens[i+1] = Double.toString(1 / Math.tan(Double.parseDouble(tokens[i + 1])));
                         break;
                     case "ln":
-                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.log(Double.parseDouble(tokens[i + 1])))));
+                        tokens[i+1] = Double.toString(Math.log(Double.parseDouble(tokens[i + 1])));
                         break;
                     case "log":
-                        tokens[i+1] = Double.toString(Double.parseDouble(df.format(Math.log10(Double.parseDouble(tokens[i + 1])))));
+                        tokens[i+1] = Double.toString(Math.log10(Double.parseDouble(tokens[i + 1])));
                         break;
                 }
             }
@@ -320,7 +346,8 @@ class calculator extends JFrame implements ActionListener {
 
     public static boolean isNumber(String s){
         for(int i = 0; i < s.length(); i++){
-            if(s.charAt(i) != '.' && !Character.isDigit(s.charAt(i))) return false;
+            if(s.charAt(0) == '-' && i == 0 && s.length() > 1)continue;
+            else if(s.charAt(i) != '.' && !Character.isDigit(s.charAt(i))) return false;
         }
         return true;
     }
@@ -334,6 +361,32 @@ class calculator extends JFrame implements ActionListener {
             case "ln":
             case "log":
                 return true;
+        }
+        return false;
+    }
+
+    public static boolean isOperator(Character c){
+
+        switch(c){
+            case '+':
+            case '*':
+            case '/':
+            case '^':
+            case '-':
+                return true;
+
+        }
+        return false;
+    }
+
+    public static boolean isUnary(String exp, int i){
+
+        Character c = exp.charAt(i);
+        if(c == '-'){
+            if(i == 0) return true;
+            else if(exp.charAt(i-1) == '(') return true;
+            else if(isOperator(exp.charAt(i-1))) return true;
+
         }
         return false;
     }
